@@ -38,7 +38,7 @@ app.post('/Signin', (req, res)=>{
 // bcrypt.compare('pass', '$2b$10$OuYbxemrPAadNVk1kKWbOOdc2FRvSrAnB/2Pdf8PJMVBwQJzshz.e', function(err, res) {
 //     console.log('second', res);
 // });
-if (req.body.email === database.users[0].email && req.body.password === database.users[0].password){
+if (req.body.email === database.users[1].email && req.body.password === database.users[1].password){
         res.json(database.users[0]);
     } else {
         res.status(404).json('fakes')
