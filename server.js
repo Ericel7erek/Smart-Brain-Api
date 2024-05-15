@@ -72,17 +72,7 @@ app.post('/Signin', (req, res)=>{
     })
     .catch(err=>res.status(400).json('Wrong Credentials'))
 })
-// bcrypt.compare('cola', '$2b$10$OuYbxemrPAadNVk1kKWbOOdc2FRvSrAnB/2Pdf8PJMVBwQJzshz.e', function(err, res) {
-//     console.log('first', res);
-// });
-// bcrypt.compare('pass', '$2b$10$OuYbxemrPAadNVk1kKWbOOdc2FRvSrAnB/2Pdf8PJMVBwQJzshz.e', function(err, res) {
-//     console.log('second', res);
-// });
-// if (req.body.email === database.users[0].email && req.body.password === database.users[0].password){
-//         res.json(database.users[0]);
-//     } else {
-//         res.status(404).json('fakes')
-//     }
+
 
 app.post('/Register', (req, res)=>{
     const { email ,name ,password } = req.body
