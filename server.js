@@ -8,11 +8,7 @@ const knex = require('knex')
 const db = knex({
   client: 'pg',
   connection: {
-    host: 'postgres://smart_brain_3feo_user:DovUT7RUrMRFfA396ADYyE1OJgTMevz2@dpg-cp31hb63e1ms73f827hg-a/smart_brain_3feo',
-    port: 5432,
-    user: 'smart_brain_3feo_user',
-    password: 'DovUT7RUrMRFfA396ADYyE1OJgTMevz2',
-    database: 'Smart-Brain',
+    host: process.env.DATABASE_URL
   },
 });
 const  port= process.env.PORT || 5432
