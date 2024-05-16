@@ -24,30 +24,24 @@ app.get('/', (req, res)=>{
     res.json("Success!");
 })
 
-app.post('/Signin', (req, res) => {
-    if (!req.body.email || !req.body.password) {
-        return res.status(400).json("Incorrect email or password");
+app.post('/Signin', (req, res)=>{
+    if(!req.body.email|| !req.body.password) {
+        return res.status(400).json("Incorrect email or password")
     }
-    const lowercaseEmail = req.body.email.toLowerCase(); // Convert email to lowercase
-    db.select('email', 'hash').from('login').where('email', '=', lowercaseEmail)
-        .then(data => {
-            if (data.length === 0) {
-                return res.status(400).json('Wrong Credentials. Please try again');
-            }
-            const valid = bcrypt.compareSync(req.body.password, data[0].hash);
-            if (valid) {
-                return db.select('*').from('users').where('email', '=', lowercaseEmail)
-                    .then(user => {
-                        res.json(user[0]);
-                    })
-                    .catch(err => res.status(400).json('Unable to find user'));
-            } else {
-                res.status(400).json('Wrong Credentials. Please try again');
-            }
-        })
-        .catch(err => res.status(400).json('Wrong Credentials'));
-});
-
+    db.select('email', 'hash').from('login').where('email', '=', req.body.email)
+    .then(data=> {
+        const valid = bcrypt.compareSync(req.body.password, data[0].hash) 
+        if(valid){
+            return db.select('*').from('users').where('email', '=', req.body.email)
+            .then(user=> {res.json(user[0])
+            })
+            .catch(err=>res.status(400).json('unable to find user'))
+        } else {
+            res.status(400).json('Wrong Credentials. Please try again')
+        }
+    })
+    .catch(err=>res.status(400).json('Wrong Credentials'))
+})
 
 
 app.post('/Register', (req, res) => {
