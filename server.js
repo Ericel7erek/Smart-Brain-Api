@@ -24,55 +24,62 @@ app.get('/', (req, res)=>{
     res.json("Success!");
 })
 
-app.post('/Signin', (req, res)=>{
-    if(!req.body.email|| !req.body.password) {
-        return res.status(400).json("Incorrect email or password")
+app.post('/Signin', (req, res) => {
+    if (!req.body.email || !req.body.password) {
+        return res.status(400).json("Incorrect email or password");
     }
-    db.select('email', 'hash').from('login').where('email', '=', req.body.email)
-    .then(data=> {
-        const valid = bcrypt.compareSync(req.body.password, data[0].hash) 
-        if(valid){
-            return db.select('*').from('users').where('email', '=', req.body.email)
-            .then(user=> {res.json(user[0])
-            })
-            .catch(err=>res.status(400).json('unable to find user'))
-        } else {
-            res.status(400).json('Wrong Credentials. Please try again')
-        }
-    })
-    .catch(err=>res.status(400).json('Wrong Credentials'))
-})
+    const lowercaseEmail = req.body.email.toLowerCase(); // Convert email to lowercase
+    db.select('email', 'hash').from('login').where('email', '=', lowercaseEmail)
+        .then(data => {
+            if (data.length === 0) {
+                return res.status(400).json('Wrong Credentials. Please try again');
+            }
+            const valid = bcrypt.compareSync(req.body.password, data[0].hash);
+            if (valid) {
+                return db.select('*').from('users').where('email', '=', lowercaseEmail)
+                    .then(user => {
+                        res.json(user[0]);
+                    })
+                    .catch(err => res.status(400).json('Unable to find user'));
+            } else {
+                res.status(400).json('Wrong Credentials. Please try again');
+            }
+        })
+        .catch(err => res.status(400).json('Wrong Credentials'));
+});
 
 
-app.post('/Register', (req, res)=>{
-    const { email ,name ,password } = req.body
-    if(!email || !name || !password){
-        return res.status(404).json('Incorrect Submission')
+
+app.post('/Register', (req, res) => {
+    const { email, name, password } = req.body;
+    if (!email || !name || !password) {
+        return res.status(404).json('Incorrect Submission');
     }
     const hash = bcrypt.hashSync(password, saltRounds);
+    const lowercaseEmail = email.toLowerCase(); // Convert email to lowercase
     db.transaction(trx => {
         trx.insert({
-            hash: hash,
-            email: email
-        })
-        .into('login')
-        .returning('email')
-        .then(loginEmail =>{
-            
-            return trx('users')
-                .returning('*')
-                .insert({ 
-                    email: loginEmail[0].email, 
-                    name: name, 
-                    joined: new Date()
-                })
-                .then(user=> res.json(user))
+                hash: hash,
+                email: lowercaseEmail // Use the lowercase email for insertion
+            })
+            .into('login')
+            .returning('email')
+            .then(loginEmail => {
+                return trx('users')
+                    .returning('*')
+                    .insert({
+                        email: loginEmail[0], // Use the original email for insertion
+                        name: name,
+                        joined: new Date()
+                    })
+                    .then(user => res.json(user))
             })
             .catch(trx.rollback)
             .then(trx.commit)
-        })
-        .catch(err=> res.status(400).json("Unable to Register"))
-})
+    })
+    .catch(err => res.status(400).json("Unable to Register"));
+});
+
 
 app.get('/Profile/:id', (req, res)=>{
 const { id } = req.params
