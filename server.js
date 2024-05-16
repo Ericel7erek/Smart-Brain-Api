@@ -8,14 +8,14 @@ const knex = require('knex')
 const db = knex({
   client: 'pg',
   connection: {
-    host: '127.0.0.1',
-    port: 5432,
+    host: 'https://smart-brain-api-g8ui.onrender.com',
+    port: process.env.PORT || 4000,
     user: '',
     password: '',
     database: 'Smart-Brain',
   },
 });
-
+const  port= process.env.PORT || 4000
 app.use(express.json())
 app.use(cors())
 
@@ -100,8 +100,8 @@ db('users').where('id','=',id)
 .catch(err=>res.status(400).json("No Entries were found"))
 })
 
-app.listen(process.env.PORT, ()=>{
-    console.log(`listening on port ${process.env.PORT}`);
+app.listen(port, ()=>{
+    console.log(`listening on port ${port}`);
 })
 
 // res = this is working
