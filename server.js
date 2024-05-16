@@ -8,14 +8,13 @@ const knex = require('knex')
 const db = knex({
   client: 'pg',
   connection: {
-    host: 'https://smart-brain-api-g8ui.onrender.com',
-    hostname: 'dpg-cp31hb63e1ms73f827hg-a',
-    port: 5432,
-    user: 'smart_brain_3feo_user',
-    password: 'DovUT7RUrMRFfA396ADYyE1OJgTMevz2',
-    database: 'smart_brain_3feo',
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
   },
 });
+
 const  port= process.env.PORT || 5432
 app.use(express.json())
 app.use(cors())
