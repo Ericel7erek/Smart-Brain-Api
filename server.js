@@ -18,42 +18,11 @@ const db = knex({
 
 app.use(express.json())
 app.use(cors())
-// const database = {
-//     users: [
-//         {
-//             id: '123',
-//             name: 'John',
-//             email: 'john@example.com',
-//             password: 'cookies',
-//             entries: 0,
-//             joined: new Date(),
-//         },
-//         {
-//             id: '124',
-//             name: 'Sally',
-//             email: 'Sally@example.com',
-//             password: 'Bananas',
-//             entries: 0,
-//             joined: new Date(),
-//         }
-        
-//     ]
-// }
 
 app.get('/', (req, res)=>{
     res.json("Success!");
 })
 
-// .insert({
-  // If you are using Knex.js version 1.0.0 or higher this 
-  // now returns an array of objects. Therefore, the code goes from:
-  // loginEmail[0] --> this used to return the email
-  // TO
-  // loginEmail[0].email --> this now returns the email
-//      email: loginEmail[0].email, // <-- this is the only change!
-//      name: name,
-//      joined: new Date()
-// })
 app.post('/Signin', (req, res)=>{
     if(!req.body.email|| !req.body.password) {
         return res.status(400).json("Incorrect email or password")
@@ -103,18 +72,7 @@ app.post('/Register', (req, res)=>{
         })
         .catch(err=> res.status(400).json("Unable to Register"))
 })
-// bcrypt.hash(password, saltRounds, function(err, hash) {
-//     console.log(hash);
-    // Store hash in your password DB.
 
-//     .then(entries => {
-//     // If you are using knex.js version 1.0.0 or higher this now 
-//     // returns an array of objects. Therefore, the code goes from:
-//     // entries[0] --> this used to return the entries
-//     // TO
-//     // entries[0].entries --> this now returns the entries
-//     res.json(entries[0].entries);
-//   })
 app.get('/Profile/:id', (req, res)=>{
 const { id } = req.params
 
