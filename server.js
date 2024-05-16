@@ -100,8 +100,8 @@ db('users').where('id','=',id)
 .catch(err=>res.status(400).json("No Entries were found"))
 })
 
-app.listen(3000, ()=>{
-    console.log('listening on port 3000');
+app.listen(process.env.PORT, ()=>{
+    console.log(`listening on port ${process.env.PORT}`);
 })
 
 // res = this is working
